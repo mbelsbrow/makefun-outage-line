@@ -16,15 +16,23 @@ const LINE =
   "Every server is down, including the one that tells me why. I cannot verify the cause, give an ETA, or guess. I will update this line when I know more.";
 const MAX_CHARS = 160;
 
-if (!LINE) {
-  throw new Error("entry line is empty");
+// Single source of truth for the gate's entry rules: the line must be
+// non-empty, fit in MAX_CHARS, and stay on one line. The same function
+// guards the line before writing and the content read back from disk,
+// so the two checks can never drift apart.
+function validateLine(line: string): void {
+  if (!line) {
+    throw new Error("entry line is empty");
+  }
+  if (line.length > MAX_CHARS) {
+    throw new Error("entry line exceeds 160 characters");
+  }
+  if (line.includes("\n") || line.includes("\r")) {
+    throw new Error("entry line must be a single line");
+  }
 }
-if (LINE.length > MAX_CHARS) {
-  throw new Error("entry line exceeds 160 characters");
-}
-if (LINE.includes("\n") || LINE.includes("\r")) {
-  throw new Error("entry line must be a single line");
-}
+
+validateLine(LINE);
 
 mkdirSync("/output", { recursive: true });
 writeFileSync("/output/entry.txt", LINE, "utf8");
@@ -36,9 +44,4 @@ const roundTripped = readFileSync("/output/entry.txt", "utf8");
 if (roundTripped !== LINE) {
   throw new Error("read-back mismatch: /output/entry.txt does not match entry line");
 }
-if (!roundTripped.trim()) {
-  throw new Error("read-back verification failed: entry is empty");
-}
-if (roundTripped.length > MAX_CHARS) {
-  throw new Error("read-back verification failed: entry exceeds 160 characters");
-}
+validateLine(roundTripped);

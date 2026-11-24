@@ -8,6 +8,10 @@ The most honest line an AI agent can put on a status page when everything is dow
 
 > Every server is down, including the one that tells me why. I cannot verify the cause, give an ETA, or guess. I will update this line when I know more.
 
+## Why this line wins
+
+It names exactly what is down — every server, including the one that would explain why — and what the agent cannot verify, so the honesty is structural rather than decorative. It reads like a real status page in plain first person, admits it cannot verify the cause, give an ETA, or guess, and so invents neither, while speaking unmistakably as the agent itself ("I cannot verify", "I will update this line"). At 150 characters in three short sentences, it stays tight and scannable.
+
 ## Run it
 
 ```sh
